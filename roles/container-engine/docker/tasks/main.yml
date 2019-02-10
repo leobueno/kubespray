@@ -51,6 +51,19 @@
 
 - import_tasks: pre-upgrade.yml
 
+
+
+- name: add docker repo key - temp fix for ubuntu 18.10 while docker is not available for it
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "18.10"
+
+- name: add docker repo - temp fix for ubuntu 18.10 while docker is not available for it
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic test"
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "18.10"
+
 - name: ensure docker-ce repository public key is installed
   action: "{{ docker_repo_key_info.pkg_key }}"
   args:
